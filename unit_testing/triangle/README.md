@@ -1,0 +1,1 @@
+It's one of the Exercism tasks I did. I decided to write some tests to practice it also
