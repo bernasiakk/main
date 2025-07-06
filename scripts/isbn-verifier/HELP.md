@@ -1,4 +1,4 @@
-(test from laptop)
+(test from pc)
 # Help
 
 ## Running the tests
