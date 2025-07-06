@@ -9,7 +9,6 @@ def is_valid(isbn):
     - [] take the last number (the 'check' number) as a separate variable
     - [] if X is in the last position string, convert it to 10 >> convert the variable to int()
     - [] for i, j in 9_digits, reversed(range(2,11))
-    - [] TODO continue with the instruction, then write the code
     
     checks:
         - all numbers are 
@@ -21,12 +20,10 @@ def is_valid(isbn):
         raise TypeError("ISBN must consist of only numbers, digits and X'es")
     
     # TODO include X in here also. Then, it will be easy to make sure it's at the last position only
-    isbn = re.sub('[^0-9]','', isbn)
+    isbn = re.sub('[^0-9X]','', isbn)
     
     if not len(isbn) == 10:
-        # TODO uncomment and unpass after you do the above one
-        # raise ValueError("ISBN must be a length of 10 (excl. dashes)")
-        pass
+        raise ValueError("ISBN must be a length of 10 (excl. dashes)")
     
     # TODO add checks (i.e., if not isinstance(main_numbers, digits)...)
     isbn_main_numbers = isbn[:9]
@@ -36,8 +33,9 @@ def is_valid(isbn):
     # TODO change this 'j' to sth else
     isbn_main_numbers_value = 0
     
-    for number, j in zip(isbn_main_numbers, range(10,1,-1)):
+    for number, j in zip(isbn_main_numbers, range(10,0,-1)):
         isbn_main_numbers_value += int(number) * j
+        print(f"number: {number}, j: {j}, total accumulated: {isbn_main_numbers_value}")
     
     # TODO fix this part, it's messed up
     if isbn_main_numbers_value // 11 == isbn_check_number:
@@ -45,8 +43,6 @@ def is_valid(isbn):
     print(isbn_main_numbers_value % 11)
     return False
         
-
-print(is_valid(1000))
 
 if __name__ == "__main__":
     is_valid("3-598-21508-8")
