@@ -1,5 +1,21 @@
 from random import randint
+from functools import wraps
 
+def require_positive_amount(f):
+    @wraps(f)
+    def wrapper(self, amount, *args, **kwargs):
+        if amount <= 0:
+            raise ValueError("amount must be greater than 0")
+        return f(self, amount, *args, **kwargs)
+    return wrapper
+
+def require_active_account(f):
+    @wraps(f)
+    def wrapper(self, *args, **kwargs):
+        if not self.active:
+            raise ValueError("account not open")
+        return f(self, *args, **kwargs)
+    return wrapper
 
 class BankAccount:
     bank_acct_numbers = set()
@@ -14,6 +30,7 @@ class BankAccount:
                 break
         self.balance = 0
 
+    @require_active_account
     def get_balance(self):
         return self.balance
 
@@ -24,28 +41,28 @@ class BankAccount:
             yeah, there is something like this. Just have a `opened` boolean variable
         """
         if self.active:
-            raise ValueError("Cannot open an account that's already open")
+            raise ValueError("account already open")
         self.active = 1
         return self
 
+    @require_active_account
+    @require_positive_amount
     def deposit(self, amount):
-        if amount <= 0:
-            raise ValueError("Amount must be greater than 0")
         self.balance = self.balance + amount
         return self
 
+    @require_active_account
+    @require_positive_amount
     def withdraw(self, amount):
-        if amount <= 0:
-            raise ValueError("Amount must be greater than 0")
-        if self.balance - amount < 0:
-            raise ValueError("Insufficient funds.")
+        if amount > self.balance:
+            raise ValueError("amount must be less than balance")
         self.balance = self.balance - amount
         return self
 
+    @require_active_account
     def close(self):
-        if not self.active:
-            raise ValueError("Cannot close an inactive account")
         self.active = 0
+        self.balance = 0
         return self
 
 # some_acc = BankAccount()
