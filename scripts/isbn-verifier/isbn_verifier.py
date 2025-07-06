@@ -26,23 +26,18 @@ def is_valid(isbn):
         raise ValueError("ISBN must be a length of 10 (excl. dashes)")
     
     # TODO add checks (i.e., if not isinstance(main_numbers, digits)...)
-    isbn_main_numbers = isbn[:9]
-    isbn_check_number = isbn[-1]
     
     # TODO list comprehension
     # TODO change this 'j' to sth else
-    isbn_main_numbers_value = 0
+    isbn_sum = 0
     
-    for number, j in zip(isbn_main_numbers, range(10,0,-1)):
-        isbn_main_numbers_value += int(number) * j
-        print(f"number: {number}, j: {j}, total accumulated: {isbn_main_numbers_value}")
+    for number, j in zip(isbn, range(10,0,-1)):
+        isbn_sum += int(number) * j
     
-    # TODO fix this part, it's messed up
-    if isbn_main_numbers_value // 11 == isbn_check_number:
+    if isbn_sum % 11 == 0:
         return True
-    print(isbn_main_numbers_value % 11)
     return False
         
 
 if __name__ == "__main__":
-    is_valid("3-598-21508-8")
+    print(is_valid("3-598-21508-8"))
