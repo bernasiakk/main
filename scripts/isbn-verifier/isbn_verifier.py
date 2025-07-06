@@ -1,38 +1,30 @@
 import re
 
 def is_valid(isbn):
-    """
-    - [x] verify that only hyphens and digits are there
-    - [x] clean the number from hyphens, etc.
-    - [x] check that length is 10
-    - [] check that the first 9 chars are numbers (and use that as a list called 9_digits)
-    - [] take the last number (the 'check' number) as a separate variable
-    - [] if X is in the last position string, convert it to 10 >> convert the variable to int()
-    - [] for i, j in 9_digits, reversed(range(2,11))
-    
-    checks:
-        - all numbers are 
-        - length is
-    """
     isbn = str(isbn)
     
+    # TODO change this so it checks if X is only at the last place??
     if not re.fullmatch(r"[0-9X\-]+", isbn):
-        raise TypeError("ISBN must consist of only numbers, digits and X'es")
+        return False
     
-    # TODO include X in here also. Then, it will be easy to make sure it's at the last position only
     isbn = re.sub('[^0-9X]','', isbn)
     
-    if not len(isbn) == 10:
-        raise ValueError("ISBN must be a length of 10 (excl. dashes)")
     
-    # TODO add checks (i.e., if not isinstance(main_numbers, digits)...)
+    if not len(isbn) == 10:
+        return False
+
+    isbn = list(isbn)
+
+    if 'X' in isbn:
+        if not isbn[-1] == 'X':
+            return False
+        isbn[-1] = '10'
     
     # TODO list comprehension
-    # TODO change this 'j' to sth else
     isbn_sum = 0
     
-    for number, j in zip(isbn, range(10,0,-1)):
-        isbn_sum += int(number) * j
+    for number, weight in zip(isbn, range(10,0,-1)):
+        isbn_sum += int(number) * weight
     
     if isbn_sum % 11 == 0:
         return True
